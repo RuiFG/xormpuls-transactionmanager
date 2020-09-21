@@ -13,6 +13,7 @@ package main
 
 import (
 	"github.com/RuiFG/xormpuls-transactionmanager"
+    _ "github.com/go-sql-driver/mysql"
 	"github.com/xormplus/xorm"
 )
 
