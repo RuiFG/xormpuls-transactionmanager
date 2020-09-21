@@ -13,8 +13,8 @@ type synchronizeManager struct {
 
 func (s *synchronizeManager) curRoutineStack() SessionStack {
 	actual, _ := s.syncMap.LoadOrStore(curGoroutineID(), NewSessionStack())
-	stack := actual.(sessionStack)
-	return &stack
+	stack := actual.(SessionStack)
+	return stack
 }
 
 func (s *synchronizeManager) Get() *Session {
@@ -22,7 +22,7 @@ func (s *synchronizeManager) Get() *Session {
 	if stack.IsEmpty() {
 		return s.engine.NewSession()
 	}
-	//FIXME
+
 	if curSession, ok := stack.Top(); !ok {
 		panic(fmt.Errorf("get session error,sessionStack size is %d", stack.Size()))
 	} else {
@@ -33,7 +33,7 @@ func (s *synchronizeManager) Get() *Session {
 func (s *synchronizeManager) Remove() {
 	stack := s.curRoutineStack()
 	if _, ok := stack.Pop(); !ok {
-		//TODO
+		panic("the size of stack is zero")
 	}
 	if stack.IsEmpty() {
 		s.syncMap.Delete(curGoroutineID())
